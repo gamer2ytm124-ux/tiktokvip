@@ -9,13 +9,11 @@
     </author>
     <content src="index.html" />
 
-    <!-- Permisos de Android que necesita la app -->
     <preference name="android-minSdkVersion" value="24" />
     <preference name="android-targetSdkVersion" value="34" />
     <preference name="AndroidXEnabled" value="true" />
     <preference name="Orientation" value="portrait" />
 
-    <!-- Permisos de acceso a internet, almacenamiento y overlay -->
     <edit-config file="app/src/main/AndroidManifest.xml" mode="add" target="/manifest">
         <uses-permission android:name="android.permission.INTERNET" />
         <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -37,7 +35,6 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
 
-    <!-- Plugins necesarios -->
     <plugin name="cordova-plugin-whitelist" spec="^1.3.5" />
     <plugin name="cordova-plugin-file" spec="^8.0.0" />
     <plugin name="cordova-plugin-inappbrowser" spec="^6.0.0" />
