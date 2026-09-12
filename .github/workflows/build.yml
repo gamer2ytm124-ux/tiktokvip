@@ -39,6 +39,14 @@ jobs:
           cordova plugin add cordova-plugin-android-permissions
           cordova plugin add https://github.com/ahmedwahba/cordova-plugin-drawoverapps
 
+      - name: Corregir código obsoleto del plugin de overlay
+        run: |
+          FILE=$(find platforms/android -name "OverAppsService.java")
+          echo "Editando: $FILE"
+          sed -i '/setAppCacheEnabled/d' "$FILE"
+          sed -i '/setAppCacheMaxSize/d' "$FILE"
+          sed -i '/setAppCachePath/d' "$FILE"
+
       - name: Compilar APK (debug)
         run: cordova build android
 
