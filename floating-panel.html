@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikTok VIP - Panel</title>
+<style>
+  :root{
+    --bg:#F5ECDD; --panel:#FFFFFF; --accent:#8A9A8D; --accent-2:#777580;
+    --text:#3E3A3C; --muted:#8D897F; --border:#E4DED0; --sunken:#E7E8E0;
+    --ink:#2E2B2D; --error:#B2554A;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;background:transparent;font-family:'Segoe UI',system-ui,sans-serif;}
+  .panel{
+    width:220px;background:var(--panel);border:1px solid var(--border);
+    border-radius:14px;box-shadow:0 12px 30px -10px rgba(0,0,0,0.4);
+    overflow:hidden;
+  }
+  .head{
+    padding:10px 12px;background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    color:var(--ink);font-weight:700;font-size:13px;
+  }
+  .body{padding:10px;display:flex;flex-direction:column;gap:8px;}
+  input{
+    width:100%;background:var(--sunken);border:1px solid var(--border);border-radius:8px;
+    padding:9px 10px;font-size:12px;color:var(--text);font-family:inherit;outline:none;
+  }
+  button{
+    width:100%;border:none;border-radius:8px;padding:9px 10px;font-weight:700;
+    font-size:12px;font-family:inherit;cursor:pointer;
+  }
+  .primary{background:linear-gradient(135deg, var(--accent), var(--accent-2));color:var(--ink);}
+  .status{font-size:11px;color:var(--muted);min-height:14px;}
+  .status.error{color:var(--error);}
+  .result{display:none;}
+  .result.show{display:block;}
+  .preview{display:flex;gap:8px;align-items:center;margin:8px 0;}
+  .cover{width:34px;height:46px;border-radius:6px;object-fit:cover;background:var(--sunken);}
+  .author{font-size:11.5px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+</style>
+</head>
+<body>
+  <div class="panel">
+    <div class="head">TikTok VIP</div>
+    <div class="body">
+      <input type="text" id="url" placeholder="Pega el enlace aquí">
+      <button class="primary" id="go">Buscar video</button>
+      <div class="status" id="status"></div>
+      <div class="result" id="result">
+        <div class="preview">
+          <img class="cover" id="cover" alt="">
+          <div class="author" id="author"></div>
+        </div>
+        <button class="primary" id="download">Descargar sin marca de agua</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* Este panel corre en un WebView del sistema, SEPARADO del
+   WebView principal de la app (así funciona el plugin de
+   overlay). Por eso repite aquí, de forma reducida, solo la
+   lógica necesaria para buscar y descargar un video. */
+
+const input = document.getElementById('url');
+const statusEl = document.getElementById('status');
+const goBtn = document.getElementById('go');
+const result = document.getElementById('result');
+const downloadBtn = document.getElementById('download');
+
+function normalizeUrl(rawUrl){
+  return /^https?:\/\//i.test(rawUrl) ? rawUrl : 'https://' + rawUrl;
+}
+
+async function fetchTikTok(url){
+  const apiUrl = 'https://www.tikwm.com/api/?url=' + encodeURIComponent(url) + '&hd=1';
+  const res = await fetch(apiUrl);
+  if(!res.ok) throw new Error('network');
+  const json = await res.json();
+  if(json.code !== 0 || !json.data) throw new Error('invalid');
+  const data = json.data;
+  return {
+    author: (data.author && data.author.nickname) || 'Video de TikTok',
+    cover: data.cover || data.origin_cover || '',
+    downloadUrl: data.hdplay || data.play,
+    filename: ((data.author && data.author.unique_id) || 'tiktok') + '_' + (data.id || Date.now()),
+  };
+}
+
+let currentInfo = null;
+
+goBtn.addEventListener('click', async () => {
+  const raw = input.value.trim();
+  statusEl.classList.remove('error');
+  result.classList.remove('show');
+  if(!raw){
+    statusEl.textContent = 'Pega un enlace primero.';
+    statusEl.classList.add('error');
+    return;
+  }
+  statusEl.textContent = 'Buscando...';
+  goBtn.disabled = true;
+  try{
+    currentInfo = await fetchTikTok(normalizeUrl(raw));
+    document.getElementById('cover').src = currentInfo.cover;
+    document.getElementById('author').textContent = currentInfo.author;
+    result.classList.add('show');
+    statusEl.textContent = 'Listo.';
+  }catch(e){
+    statusEl.textContent = 'No se pudo procesar el enlace.';
+    statusEl.classList.add('error');
+  }finally{
+    goBtn.disabled = false;
+  }
+});
+
+downloadBtn.addEventListener('click', async () => {
+  if(!currentInfo) return;
+  statusEl.textContent = 'Descargando...';
+  try{
+    const response = await fetch(currentInfo.downloadUrl);
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = currentInfo.filename + '.mp4';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    statusEl.textContent = '✅ Guardado.';
+  }catch(e){
+    statusEl.textContent = 'Error al descargar.';
+    statusEl.classList.add('error');
+  }
+});
+
+// Cerrar el overlay tocando fuera del panel no aplica aquí
+// (el plugin ya provee su propio botón nativo de cierre "X").
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "tiktokvip",
+  "displayName": "TikTok VIP",
+  "version": "1.0.0",
+  "description": "Descargador de videos de TikTok con panel flotante sobre otras apps",
+  "cordova": {
+    "platforms": [
+      "android"
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.tiktokvip.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>TikTok VIP</name>
+    <description>
+        Descargador de videos de TikTok sin marca de agua, con panel flotante.
+    </description>
+    <author email="tucorreo@ejemplo.com" href="https://ejemplo.com">
+        Tu Nombre
+    </author>
+    <content src="index.html" />
+
+    <!-- Permisos de Android que necesita la app -->
+    <preference name="android-minSdkVersion" value="24" />
+    <preference name="android-targetSdkVersion" value="34" />
+    <preference name="AndroidXEnabled" value="true" />
+    <preference name="Orientation" value="portrait" />
+
+    <!-- Permisos de acceso a internet, almacenamiento y overlay -->
+    <edit-config file="app/src/main/AndroidManifest.xml" mode="add" target="/manifest">
+        <uses-permission android:name="android.permission.INTERNET" />
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+        <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+        <uses-permission android:name="android.permission.CAMERA" />
+        <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    </edit-config>
+
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    </platform>
+
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+
+    <!-- Plugins necesarios -->
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.5" />
+    <plugin name="cordova-plugin-file" spec="^8.0.0" />
+    <plugin name="cordova-plugin-inappbrowser" spec="^6.0.0" />
+    <plugin name="cordova-plugin-drawoverapps" spec="https://github.com/ahmedwahba/cordova-plugin-drawoverapps" />
+    <plugin name="cordova-plugin-android-permissions" spec="^1.1.5" />
+</widget>

@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikTok VIP</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#DD8367">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TikTok VIP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.js"></script>
+<style>
+  :root{
+    --bg:#F5ECDD;
+    --panel:#FFFFFF;
+    --accent:#8A9A8D;
+    --accent-2:#777580;
+    --text:#3E3A3C;
+    --muted:#8D897F;
+    --border:#E4DED0;
+    --sunken:#E7E8E0;
+    --ink:#2E2B2D;
+    --disabled-bg:#DAD6C9;
+    --error:#B2554A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(221,131,103,0.10), transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(131,156,116,0.12), transparent 45%),
+      var(--bg);
+    font-family:'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color:var(--text);
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:56px 20px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{width:100%;max-width:520px;}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .brand .logo{
+    width:34px;height:34px;border-radius:10px;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .brand .logo svg{width:18px;height:18px;color:var(--ink);}
+  .brand .mark{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+  .brand .mark span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:15px;margin:0 0 20px 0;line-height:1.5;}
+  .go-tiktok-btn{margin-bottom:24px;}
+  .card{
+    position:relative;background:var(--panel);border:1px solid var(--border);
+    border-radius:18px;padding:28px;
+    box-shadow:0 20px 45px -22px rgba(74,54,46,0.25);overflow:hidden;
+  }
+  .card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg, var(--accent), var(--accent-2));opacity:.85;
+  }
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px;}
+  .input-row{display:flex;gap:8px;}
+  .input-wrap{position:relative;flex:1;display:flex;}
+  input[type=text]{
+    flex:1;width:100%;background:var(--sunken);border:1px solid var(--border);
+    border-radius:10px;padding:13px 34px 13px 14px;color:var(--text);
+    font-family:inherit;font-size:14px;outline:none;transition:border-color .15s ease;
+  }
+  input[type=text]:focus{border-color:var(--accent);}
+  .clear-btn{
+    position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    width:24px;height:24px;border-radius:50%;background:transparent;border:none;
+    color:var(--muted);display:none;align-items:center;justify-content:center;
+    padding:0;cursor:pointer;transition:background .15s ease, color .15s ease;
+  }
+  .clear-btn.show{display:flex;}
+  .clear-btn:hover{color:var(--accent-2);background:rgba(131,156,116,0.1);}
+  .clear-btn svg{width:13px;height:13px;}
+  .icon-btn{
+    background:var(--sunken);border:1px solid var(--border);color:var(--text);
+    border-radius:10px;width:44px;flex-shrink:0;display:flex;
+    align-items:center;justify-content:center;padding:0;cursor:pointer;
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .icon-btn:hover{border-color:var(--accent);background:rgba(221,131,103,0.08);}
+  .icon-btn:active{transform:scale(0.94);}
+  .icon-btn svg{width:17px;height:17px;}
+  button{
+    background:var(--accent);color:var(--ink);border:none;border-radius:10px;
+    padding:0 20px;font-weight:700;font-family:inherit;font-size:14px;
+    cursor:pointer;transition:filter .15s ease, transform .1s ease;white-space:nowrap;
+  }
+  button:hover{filter:brightness(1.08);}
+  button:active{transform:scale(0.97);}
+  button:disabled{background:var(--disabled-bg);color:var(--muted);cursor:not-allowed;}
+  .platforms{display:flex;gap:8px;margin-top:12px;}
+  .pill{
+    font-size:11.5px;font-weight:600;color:var(--muted);background:var(--sunken);
+    border:1px solid var(--border);border-radius:20px;padding:5px 12px;
+    transition:border-color .15s ease, color .15s ease, box-shadow .15s ease;
+  }
+  .pill.active{color:var(--accent);border-color:var(--accent);box-shadow:0 0 0 3px rgba(221,131,103,0.12);}
+  .status{margin-top:16px;font-size:13.5px;color:var(--muted);min-height:18px;}
+  .status.error{color:var(--error);}
+  .result{margin-top:24px;display:none;opacity:0;transform:translateY(6px);}
+  .result.show{display:block;animation:fadeInUp .35s ease forwards;}
+  @keyframes fadeInUp{to{opacity:1;transform:translateY(0);}}
+  .preview{
+    display:flex;gap:14px;align-items:flex-start;padding-bottom:20px;
+    border-bottom:1px solid var(--border);margin-bottom:20px;
+  }
+  .cover{
+    width:76px;height:100px;border-radius:8px;object-fit:cover;
+    background:var(--sunken);flex-shrink:0;
+  }
+  .meta{min-width:0;}
+  .meta .author{
+    font-weight:700;font-size:14.5px;margin-bottom:4px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .meta .desc{
+    font-size:13px;color:var(--muted);line-height:1.4;
+    overflow-wrap:anywhere;word-break:break-word;
+  }
+  .meta .desc.clamped{
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .desc-toggle{
+    display:none;background:none;border:none;padding:0;margin-top:6px;
+    font-size:12px;font-weight:700;color:var(--accent-2);cursor:pointer;font-family:inherit;
+  }
+  .desc-toggle.show{display:inline-block;}
+  .desc-toggle:hover{text-decoration:underline;}
+  .actions{display:flex;flex-direction:column;gap:10px;}
+  .dl-link{
+    display:flex;align-items:center;gap:10px;text-decoration:none;
+    background:var(--sunken);border:1px solid var(--border);border-radius:10px;
+    padding:13px 16px;color:var(--text);font-size:14px;font-weight:600;
+    font-family:inherit;width:100%;text-align:left;cursor:pointer;
+    transition:border-color .15s ease, transform .1s ease;
+  }
+  .dl-link:disabled{opacity:.6;cursor:not-allowed;}
+  .dl-link:active{transform:scale(0.98);}
+  .dl-link:hover{border-color:var(--accent);}
+  .dl-link .label{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .dl-link .dl-icon{
+    width:30px;height:30px;flex-shrink:0;border-radius:8px;display:flex;
+    align-items:center;justify-content:center;background:rgba(58,42,34,0.06);color:var(--muted);
+  }
+  .dl-link .dl-icon svg{width:15px;height:15px;}
+  .dl-link.primary{
+    border:none;background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    color:var(--ink);box-shadow:0 8px 20px -8px rgba(221,131,103,0.5);
+  }
+  .dl-link.primary:hover{filter:brightness(1.06);}
+  .dl-link.primary .dl-icon{background:rgba(58,42,34,0.18);color:var(--ink);}
+  .dl-link .tag{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.3px;flex-shrink:0;}
+  .dl-link.primary .tag{color:var(--ink);background:rgba(58,42,34,0.16);padding:3px 8px;border-radius:6px;}
+  .note{margin-top:18px;font-size:12px;color:var(--muted);line-height:1.5;text-align:center;}
+  
+  /* === BARRA DE PROGRESO MEJORADA === */
+  .progress-container{display:none;margin-top:16px;padding:16px;background:var(--sunken);border-radius:12px;border:1px solid var(--border);}
+  .progress-container.show{display:block;}
+  .progress-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .progress-percent{font-weight:700;font-size:18px;color:var(--accent);}
+  .progress-details{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-bottom:8px;}
+  .progress-bar-wrap{width:100%;height:10px;background:var(--disabled-bg);border-radius:10px;overflow:hidden;}
+  .progress-bar{height:100%;width:0%;background:linear-gradient(90deg, var(--accent), var(--accent-2));border-radius:10px;transition:width .2s ease;}
+  .progress-status{margin-top:8px;font-size:12px;color:var(--text);text-align:center;}
+
+  /* MEJORADOR DE CALIDAD */
+  .enhancer-section{margin-top:24px;padding-top:24px;border-top:1px solid var(--border);}
+  .enhancer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .enhancer-title{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:var(--ink);}
+  .enhancer-title .enh-icon{
+    width:30px;height:30px;border-radius:8px;
+    background:linear-gradient(135deg, rgba(221,131,103,0.15), rgba(131,156,116,0.15));
+    display:flex;align-items:center;justify-content:center;color:var(--accent);
+  }
+  .enhancer-title .enh-icon svg{width:16px;height:16px;}
+  .toggle-enhancer{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;user-select:none;}
+  .toggle-switch{width:44px;height:24px;background:var(--disabled-bg);border-radius:20px;position:relative;transition:background .25s ease;}
+  .toggle-switch::after{
+    content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;
+    background:white;border-radius:50%;box-shadow:0 2px 5px rgba(0,0,0,0.2);transition:transform .25s ease;
+  }
+  .toggle-enhancer.active .toggle-switch{background:linear-gradient(135deg, var(--accent), var(--accent-2));}
+  .toggle-enhancer.active .toggle-switch::after{transform:translateX(20px);}
+  .toggle-enhancer.active{color:var(--accent);}
+  .enhancer-panel{display:none;animation:fadeInUp .3s ease;}
+  .enhancer-panel.show{display:block;}
+  .preset-row{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .preset-btn{
+    flex:1;min-width:80px;padding:8px 10px;font-size:11.5px;font-weight:600;
+    background:var(--sunken);border:1px solid var(--border);border-radius:8px;
+    color:var(--muted);cursor:pointer;transition:all .15s ease;font-family:inherit;
+  }
+  .preset-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .preset-btn.active{
+    background:linear-gradient(135deg, rgba(221,131,103,0.12), rgba(131,156,116,0.12));
+    border-color:var(--accent);color:var(--accent);
+  }
+  .slider-group{display:flex;flex-direction:column;gap:14px;margin-bottom:18px;}
+  .slider-item{display:flex;flex-direction:column;gap:6px;}
+  .slider-label{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--text);}
+  .slider-label .value{color:var(--accent);font-variant-numeric:tabular-nums;}
+  .slider-item input[type=range]{
+    -webkit-appearance:none;width:100%;height:6px;background:var(--sunken);
+    border:1px solid var(--border);border-radius:20px;outline:none;
+  }
+  .slider-item input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:18px;height:18px;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-radius:50%;cursor:pointer;box-shadow:0 2px 6px rgba(221,131,103,0.4);
+  }
+  .slider-item input[type=range]::-moz-range-thumb{
+    width:18px;height:18px;background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    border:none;border-radius:50%;cursor:pointer;
+  }
+  .preview-video-wrap{
+    position:relative;border-radius:12px;overflow:hidden;background:#000;
+    margin:0 auto 14px;aspect-ratio:9/16;max-height:340px;width:70%;
+  }
+  .preview-video-wrap video{width:100%;height:100%;object-fit:contain;display:block;transition:filter .2s ease;}
+
+  /* === ESCÁNER DE QR (recoloreado con la paleta de la app) === */
+  :root{ --qr2-viewport-ink:#D8D3C4; }
+  .qr2-device{
+    position:relative;background:var(--panel);color:var(--text);
+    font-family:'Manrope',sans-serif;border-radius:18px;padding:22px;margin-top:24px;
+    box-shadow:0 20px 45px -22px rgba(74,54,46,0.25);border:1px solid var(--border);
+  }
+  .qr2-device-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;padding:0 2px;}
+  .qr2-brand{font-weight:800;font-size:15px;letter-spacing:0.02em;color:var(--ink);}
+  .qr2-brand span{color:var(--accent);}
+  .qr2-status{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+  .qr2-status.live{color:var(--accent);}
+  .qr2-viewport{
+    position:relative;aspect-ratio:3/4;background:#000;border-radius:10px;
+    overflow:hidden;border:1px solid var(--border);
+  }
+  .qr2-viewport video, .qr2-still-preview{width:100%;height:100%;object-fit:cover;display:block;}
+  .qr2-placeholder{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:10px;color:var(--qr2-viewport-ink);text-align:center;padding:0 30px;
+  }
+  .qr2-placeholder svg{display:none;}
+  .qr2-placeholder p{display:none;}
+  .qr2-brackets span{position:absolute;width:28px;height:28px;border:2.5px solid var(--accent);opacity:0.9;}
+  .qr2-brackets .tl{top:14px;left:14px;border-right:none;border-bottom:none;}
+  .qr2-brackets .tr{top:14px;right:14px;border-left:none;border-bottom:none;}
+  .qr2-brackets .bl{bottom:14px;left:14px;border-right:none;border-top:none;}
+  .qr2-brackets .br{bottom:14px;right:14px;border-left:none;border-top:none;}
+  .qr2-scanline{
+    position:absolute;left:8%;right:8%;height:2px;
+    background:linear-gradient(90deg, transparent, var(--bg), transparent);
+    box-shadow:0 0 8px 1px var(--bg);animation:qr2Sweep 2.1s ease-in-out infinite;
+  }
+  @keyframes qr2Sweep{0%{top:16%;}50%{top:82%;}100%{top:16%;}}
+  .qr2-hidden{display:none !important;}
+  .qr2-controls{display:flex;gap:10px;margin-top:14px;}
+  .qr2-ctl-btn{
+    flex:1;background:var(--sunken);border:1px solid var(--border);color:var(--text);
+    font-family:'Manrope',sans-serif;font-weight:700;font-size:13.5px;padding:13px 10px;
+    border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    gap:8px;transition:border-color .15s ease, background .15s ease;
+  }
+  .qr2-ctl-btn:hover{border-color:var(--accent);background:rgba(138,154,141,0.12);}
+  .qr2-ctl-btn.primary{background:var(--accent);color:var(--ink);border-color:var(--accent);}
+  .qr2-ctl-btn.primary:hover{filter:brightness(1.06);}
+  .qr2-ctl-btn svg{width:16px;height:16px;flex-shrink:0;}
+  #qr2-file-input{display:none;}
+  .qr2-readout{margin-top:18px;background:var(--sunken);border:1px solid var(--border);border-radius:6px;display:none;}
+  .qr2-readout.show{display:block;}
+  .qr2-readout-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+  .qr2-readout-head .tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.04em;color:var(--accent);}
+  .qr2-readout-head .qr2-clear-btn{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:'Manrope',sans-serif;}
+  .qr2-readout-head .qr2-clear-btn:hover{color:var(--text);}
+  .qr2-readout-body{padding:16px 14px 18px;}
+  .qr2-readout-value{font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.6;word-break:break-word;white-space:pre-wrap;color:var(--text);margin:0 0 14px;}
+  .qr2-readout-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .qr2-mini-btn{
+    background:var(--panel);border:1px solid var(--border);color:var(--text);
+    font-family:'Manrope',sans-serif;font-weight:700;font-size:12.5px;padding:8px 14px;
+    border-radius:5px;cursor:pointer;
+  }
+  .qr2-mini-btn.go{background:var(--accent-2);color:#fff;border-color:var(--accent-2);}
+  .qr2-mini-btn:hover{opacity:0.88;}
+  .qr2-kind-badge{
+    display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.05em;
+    color:#fff;background:var(--muted);padding:2px 7px;border-radius:3px;margin-bottom:10px;
+  }
+  .qr2-kind-badge.url{background:var(--accent);color:var(--ink);}
+  .qr2-kind-badge.wifi{background:var(--accent-2);}
+  .qr2-foot-note{margin-top:14px;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.5;}
+
+  /* === TOGGLES DE ACTIVACIÓN POR SECCIÓN === */
+  .section-activate{display:flex;align-items:center;justify-content:between;gap:10px;margin-bottom:18px;}
+  .section-activate{justify-content:space-between;}
+  .section-activate .section-name{font-size:13.5px;font-weight:700;color:var(--ink);}
+  .section-body{transition:opacity .2s ease;}
+  .section-body.section-disabled{opacity:.42;filter:grayscale(.35);pointer-events:none;}
+
+  /* Botón de flash sobre el visor de la cámara */
+  .qr2-flash-btn{
+    position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;
+    background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.35);color:#fff;
+    display:none;align-items:center;justify-content:center;cursor:pointer;z-index:5;
+    transition:background .15s ease, color .15s ease;padding:0;
+  }
+  .qr2-flash-btn.show{display:flex;}
+  .qr2-flash-btn.active{background:var(--accent);color:var(--ink);border-color:var(--accent);}
+  .qr2-flash-btn svg{width:18px;height:18px;}
+
+  /* === BOTÓN FLOTANTE EN LA ESQUINA Y PANEL SUPERPUESTO === */
+  .floating-toggle-btn{
+    position:fixed;bottom:22px;right:18px;width:56px;height:56px;border-radius:50%;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));color:var(--ink);
+    border:none;box-shadow:0 12px 26px -10px rgba(74,54,46,0.55);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:999;
+    transition:transform .18s ease, opacity .18s ease, background .15s ease;
+  }
+  .floating-toggle-btn:active{transform:scale(0.92);}
+  .floating-toggle-btn svg{width:23px;height:23px;}
+  .floating-toggle-btn.is-hidden{opacity:0;transform:scale(.4);pointer-events:none;}
+
+  .floating-panel{
+    position:fixed;bottom:88px;right:18px;width:206px;
+    background:rgba(255,255,255,0.95);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    border:1px solid var(--border);border-radius:14px;box-shadow:0 20px 45px -18px rgba(74,54,46,0.45);
+    z-index:998;display:none;overflow:hidden;touch-action:none;
+  }
+  .floating-panel.show{display:block;animation:fadeInUp .25s ease;}
+  .floating-panel-head{
+    display:flex;align-items:center;gap:6px;padding:8px 6px 8px 4px;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));color:var(--ink);
+    font-weight:700;font-size:12px;user-select:none;
+  }
+  .floating-drag-handle{cursor:grab;font-size:14px;line-height:1;padding:2px 5px;opacity:.85;flex-shrink:0;}
+  .floating-drag-handle:active{cursor:grabbing;}
+  .floating-panel-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .floating-panel-head-actions{display:flex;align-items:center;gap:2px;flex-shrink:0;}
+  .floating-panel-min{
+    background:none;border:none;color:var(--ink);cursor:pointer;padding:2px 7px;
+    font-size:15px;font-weight:800;line-height:1;border-radius:5px;
+  }
+  .floating-panel-min:hover{background:rgba(58,42,34,0.12);}
+  .floating-panel-close{background:none;border:none;color:var(--ink);cursor:pointer;padding:4px;border-radius:5px;display:flex;}
+  .floating-panel-close:hover{background:rgba(58,42,34,0.12);}
+  .floating-panel-close svg{width:13px;height:13px;}
+  .floating-panel-content{max-height:70vh;overflow-y:auto;}
+  .floating-panel.minimized .floating-panel-content,
+  .floating-panel.minimized .floating-panel-note{display:none;}
+  .floating-panel-body{padding:10px;display:flex;flex-direction:column;gap:7px;}
+  .floating-panel-body input{
+    width:100%;background:var(--sunken);border:1px solid var(--border);border-radius:8px;
+    padding:8px 9px;font-size:12px;color:var(--text);font-family:inherit;outline:none;
+  }
+  .floating-panel-body button{font-size:12px;padding:8px 9px;border-radius:8px;}
+  .floating-panel-note{font-size:10px;color:var(--muted);line-height:1.4;padding:0 10px 10px;text-align:center;}
+
+  .floating-result{display:none;margin-top:4px;padding-top:10px;border-top:1px solid var(--border);}
+  .floating-result.show{display:block;animation:fadeInUp .25s ease;}
+  .floating-preview{display:flex;gap:8px;align-items:center;margin-bottom:10px;}
+  .floating-cover{width:38px;height:52px;border-radius:6px;object-fit:cover;background:var(--sunken);flex-shrink:0;}
+  .floating-author{font-size:12px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
+  .floating-actions{display:flex;flex-direction:column;gap:6px;}
+  .floating-actions .dl-link{padding:8px 10px;font-size:11.5px;justify-content:center;}
+  .floating-progress{display:none;margin-top:10px;}
+  .floating-progress.show{display:block;}
+  .floating-progress .progress-bar-wrap{height:6px;}
+  .floating-progress-status{font-size:10.5px;color:var(--muted);margin-top:5px;text-align:center;}
+  .floating-status{font-size:11.5px;color:var(--muted);min-height:14px;margin-top:8px;}
+  .floating-status.error{color:var(--error);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 12v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6"/>
+        <path d="M7 10l5 5 5-5"/>
+        <path d="M12 15V3"/>
+      </svg>
+    </div>
+    <div class="mark">TikTok <span>VIP</span></div>
+  </div>
+  <p class="subtitle">Descarga videos sin marca de agua de TikTok.</p>
+
+  <!-- === BOTÓN IR A TIKTOK === -->
+  <button id="go-tiktok-btn" type="button" class="dl-link primary go-tiktok-btn" style="justify-content:center;">
+    <span class="dl-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 12v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6"/>
+        <path d="M7 10l5 5 5-5"/>
+        <path d="M12 15V3"/>
+      </svg>
+    </span>
+    <span class="label">Ir a TikTok</span>
+  </button>
+
+  <div class="card">
+    <div class="section-activate">
+      <span class="section-name">Descargador</span>
+      <div class="toggle-enhancer" id="toggle-downloader">
+        <span>Activar</span>
+        <div class="toggle-switch"></div>
+      </div>
+    </div>
+    <div class="section-body section-disabled" id="downloader-body">
+    <label for="url">Enlace del video</label>
+    <div class="input-row">
+      <div class="input-wrap">
+        <input type="text" id="url" placeholder="Enlace de TikTok" autocomplete="off">
+        <button class="clear-btn" id="clear-btn" type="button" title="Borrar enlace">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <button class="icon-btn" id="paste-btn" type="button" title="Pegar enlace">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="8" y="2" width="8" height="4" rx="1"/>
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+        </svg>
+      </button>
+      <button id="go">Buscar</button>
+    </div>
+    <div class="platforms">
+      <span class="pill" id="pill-tiktok">TikTok</span>
+    </div>
+    <div class="status" id="status"></div>
+
+    <div class="result" id="result">
+      <div class="preview">
+        <img class="cover" id="cover" alt="Miniatura">
+        <div class="meta">
+          <div class="author" id="author"></div>
+          <div class="desc clamped" id="desc"></div>
+          <button class="desc-toggle" id="desc-toggle" type="button">Ver más</button>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="dl-link primary" id="link-nowm" type="button">
+          <span class="dl-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <path d="M7 10l5 5 5-5"/>
+              <path d="M12 15V3"/>
+            </svg>
+          </span>
+          <span class="label">Descargar sin marca de agua</span>
+          <span class="tag">HD</span>
+        </button>
+        <button class="dl-link" id="link-audio" type="button">
+          <span class="dl-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18V5l12-2v13"/>
+              <circle cx="6" cy="18" r="3"/>
+              <circle cx="18" cy="16" r="3"/>
+            </svg>
+          </span>
+          <span class="label">Descargar solo audio</span>
+          <span class="tag">MP3</span>
+        </button>
+      </div>
+
+      <!-- 📊 BARRA DE PROGRESO MEJORADA -->
+      <div class="progress-container" id="progress-container">
+        <div class="progress-label">
+          <span>Descargando...</span>
+          <span class="progress-percent" id="progress-percent">0%</span>
+        </div>
+        <div class="progress-details">
+          <span id="progress-current">0 MB</span>
+          <span id="progress-total">0 MB</span>
+          <span id="progress-speed">0 KB/s</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="progress-status" id="progress-status">Preparando...</div>
+      </div>
+
+      <!-- MEJORADOR DE CALIDAD CON BOTÓN ACTIVAR/DESACTIVAR -->
+      <div class="enhancer-section">
+        <div class="enhancer-header">
+          <div class="enhancer-title">
+            <span class="enh-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                <circle cx="12" cy="12" r="4"/>
+              </svg>
+            </span>
+            Mejorador de Calidad
+          </div>
+          <div class="toggle-enhancer" id="toggle-enhancer">
+            <span>Activar</span>
+            <div class="toggle-switch"></div>
+          </div>
+        </div>
+
+        <div class="enhancer-panel" id="enhancer-panel">
+          <div class="preview-video-wrap">
+            <video id="preview-video" controls playsinline muted loop></video>
+          </div>
+
+          <div class="preset-row">
+            <button class="preset-btn active" data-preset="original">Original</button>
+            <button class="preset-btn" data-preset="claro">Más claro</button>
+            <button class="preset-btn" data-preset="mejorado">Mejorado</button>
+            <button class="preset-btn" data-preset="vibrante">Vibrante</button>
+            <button class="preset-btn" data-preset="nitido">Nítido</button>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-item">
+              <div class="slider-label"><span>Brillo</span><span class="value" id="val-brightness">100%</span></div>
+              <input type="range" id="brightness" min="50" max="150" value="100">
+            </div>
+            <div class="slider-item">
+              <div class="slider-label"><span>Contraste</span><span class="value" id="val-contrast">100%</span></div>
+              <input type="range" id="contrast" min="50" max="150" value="100">
+            </div>
+            <div class="slider-item">
+              <div class="slider-label"><span>Saturación</span><span class="value" id="val-saturate">100%</span></div>
+              <input type="range" id="saturate" min="0" max="200" value="100">
+            </div>
+            <div class="slider-item">
+              <div class="slider-label"><span>Nitidez</span><span class="value" id="val-sharpen">0.0px</span></div>
+              <input type="range" id="sharpen" min="0" max="20" value="0">
+            </div>
+          </div>
+
+          <button class="dl-link primary" id="download-enhanced" type="button">
+            <span class="dl-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <path d="M7 10l5 5 5-5"/>
+                <path d="M12 15V3"/>
+              </svg>
+            </span>
+            <span class="label">Descargar video a galería</span>
+            <span class="tag">HD</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- === ESCÁNER DE QR (nuevo diseño) === -->
+  <div class="qr2-device">
+    <div class="qr2-device-head">
+      <div class="qr2-brand">ESCÁNER<span>·QR</span></div>
+      <div class="qr2-status" id="qr2-status-text">EN ESPERA</div>
+    </div>
+
+    <div class="section-activate">
+      <span class="section-name" style="font-size:12px;color:var(--muted);">Escáner</span>
+      <div class="toggle-enhancer" id="toggle-scanner">
+        <span>Activar</span>
+        <div class="toggle-switch"></div>
+      </div>
+    </div>
+
+    <div class="section-body section-disabled" id="scanner-body">
+    <div class="qr2-viewport" id="qr2-viewport">
+      <button class="qr2-flash-btn" id="qr2-flash-btn" type="button" title="Flash">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+      </button>
+      <div class="qr2-placeholder" id="qr2-placeholder">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+          <line x1="14" y1="14" x2="21" y2="14"></line>
+          <line x1="14" y1="21" x2="21" y2="21"></line>
+          <line x1="17.5" y1="14" x2="17.5" y2="21"></line>
+        </svg>
+        <p>Activa la cámara o sube una imagen<br>para leer el enlace de un código QR</p>
+      </div>
+      <video id="qr2-video" class="qr2-hidden" playsinline muted></video>
+      <img id="qr2-still-preview" class="qr2-still-preview qr2-hidden" alt="Imagen cargada">
+      <div class="qr2-brackets qr2-hidden" id="qr2-brackets">
+        <span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span>
+      </div>
+      <div class="qr2-scanline qr2-hidden" id="qr2-scanline"></div>
+    </div>
+
+    <div class="qr2-controls">
+      <button class="qr2-ctl-btn primary" id="qr2-camera-btn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+        Iniciar cámara
+      </button>
+      <button class="qr2-ctl-btn" id="qr2-upload-btn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        Subir imagen
+      </button>
+      <input type="file" id="qr2-file-input" accept="image/*">
+    </div>
+
+    <div class="qr2-readout" id="qr2-readout">
+      <div class="qr2-readout-head">
+        <span class="tag" id="qr2-readout-tag">// LECTURA CONFIRMADA</span>
+        <button class="qr2-clear-btn" id="qr2-clear-btn" type="button">Borrar</button>
+      </div>
+      <div class="qr2-readout-body">
+        <div id="qr2-kind-badge" class="qr2-kind-badge">TEXTO</div>
+        <p class="qr2-readout-value" id="qr2-readout-value"></p>
+        <div class="qr2-readout-actions" id="qr2-readout-actions">
+          <button class="qr2-mini-btn" id="qr2-copy-btn" type="button">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="qr2-foot-note">La imagen de la cámara se procesa en tu propio navegador; no se envía a ningún servidor.</p>
+    </div>
+  </div>
+
+  <p class="note">
+    📍 Se guarda en: Almacenamiento → carpeta TikTokVIP<br>
+    No funciona con videos privados. Úsalo con contenido propio.
+  </p>
+</div>
+
+<!-- === BOTÓN FLOTANTE DE ESQUINA Y PANEL SUPERPUESTO === -->
+<button class="floating-toggle-btn" id="floating-toggle-btn" type="button" title="Panel flotante">
+  <svg id="floating-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+    <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+    <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+    <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+  </svg>
+</button>
+
+<div class="floating-panel" id="floating-panel">
+  <div class="floating-panel-head">
+    <span class="floating-drag-handle" id="floating-drag-handle" title="Arrastrar">⠿</span>
+    <span class="floating-panel-title">TikTok VIP</span>
+    <div class="floating-panel-head-actions">
+      <button class="floating-panel-min" id="floating-panel-min" type="button" title="Minimizar">–</button>
+      <button class="floating-panel-close" id="floating-panel-close" type="button" title="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="floating-panel-content" id="floating-panel-content">
+  <div class="floating-panel-body">
+    <input type="text" id="floating-url" placeholder="Pega el enlace aquí">
+    <button id="floating-go" class="dl-link primary" style="justify-content:center;">Buscar video</button>
+
+    <div class="floating-result" id="floating-result">
+      <div class="floating-preview">
+        <img class="floating-cover" id="floating-cover" alt="Miniatura">
+        <div class="floating-author" id="floating-author"></div>
+      </div>
+      <div class="floating-actions">
+        <button class="dl-link primary" id="floating-link-nowm" type="button">
+          <span class="label">Sin marca de agua</span>
+        </button>
+        <button class="dl-link" id="floating-link-audio" type="button" style="display:none;">
+          <span class="label">Solo audio</span>
+        </button>
+      </div>
+      <div class="floating-progress" id="floating-progress-container">
+        <div class="progress-bar-wrap"><div class="progress-bar" id="floating-progress-bar"></div></div>
+        <div class="floating-progress-status" id="floating-progress-status"></div>
+      </div>
+    </div>
+    <div class="floating-status" id="floating-status"></div>
+  </div>
+  <p class="floating-panel-note">Arrástralo desde el tirador ⠿ para moverlo.</p>
+  </div>
+</div>
+
+<script>
+const btn = document.getElementById('go');
+const input = document.getElementById('url');
+const statusEl = document.getElementById('status');
+const result = document.getElementById('result');
+const clearBtn = document.getElementById('clear-btn');
+const pasteBtn = document.getElementById('paste-btn');
+const pillTikTok = document.getElementById('pill-tiktok');
+
+// Elementos de barra de progreso
+const progressContainer = document.getElementById('progress-container');
+const progressBar = document.getElementById('progress-bar');
+const progressPercent = document.getElementById('progress-percent');
+const progressCurrent = document.getElementById('progress-current');
+const progressTotal = document.getElementById('progress-total');
+const progressSpeed = document.getElementById('progress-speed');
+const progressStatus = document.getElementById('progress-status');
+
+function toggleClearBtn(){
+  clearBtn.classList.toggle('show', input.value.trim().length > 0);
+}
+['input','keyup','change','paste'].forEach(evt => input.addEventListener(evt, toggleClearBtn));
+
+function bindTap(el, handler){
+  let lastRun = 0;
+  const run = (e) => {
+    const now = Date.now();
+    if(now - lastRun < 400) return;
+    lastRun = now;
+    handler(e);
+  };
+  el.addEventListener('click', run);
+  el.addEventListener('touchend', (e) => { e.preventDefault(); run(e); }, { passive:false });
+}
+
+function clearLink(){
+  input.value = '';
+  toggleClearBtn();
+  result.classList.remove('show');
+  statusEl.textContent = '';
+  statusEl.classList.remove('error');
+  pillTikTok.classList.remove('active');
+  progressContainer.classList.remove('show');
+  input.focus();
+}
+bindTap(clearBtn, clearLink);
+
+/* === PORTAPAPELES MEJORADO === */
+async function requestClipboardPermissionIfNeeded(){
+  try{
+    if(window.cordova && cordova.plugins && cordova.plugins.permissions && cordova.plugins.permissions.READ_CLIPBOARD){
+      const permissions = cordova.plugins.permissions;
+      return await new Promise((resolve) => {
+        permissions.checkPermission(permissions.READ_CLIPBOARD, (status) => {
+          if(status.hasPermission){
+            resolve(true);
+          }else{
+            permissions.requestPermission(permissions.READ_CLIPBOARD, (result) => {
+              resolve(!!result.hasPermission);
+            }, () => resolve(false));
+          }
+        }, () => resolve(true));
+      });
+    }
+  }catch(e){}
+  try{
+    if(navigator.permissions && navigator.permissions.query){
+      const status = await navigator.permissions.query({ name: 'clipboard-read' });
+      if(status.state === 'denied') return false;
+    }
+  }catch(e){}
+  return true;
+}
+
+async function pasteFromClipboard(){
+  const allowed = await requestClipboardPermissionIfNeeded();
+  if(!allowed) return { text:'', denied:true };
+  try{
+    if(navigator.clipboard && navigator.clipboard.readText){
+      const text = await navigator.clipboard.readText();
+      if(text && text.trim()) return { text: text.trim(), denied:false };
+    }
+  }catch(e){}
+  try{
+    if(window.cordova && window.cordova.plugins && window.cordova.plugins.clipboard){
+      const text = await new Promise((resolve, reject) => {
+        cordova.plugins.clipboard.paste(resolve, reject);
+      });
+      return { text: text || '', denied:false };
+    }
+  }catch(e){}
+  try{
+    const ta = document.createElement('textarea');
+    ta.style.cssText = 'position:fixed;top:-9999px;opacity:0;';
+    document.body.appendChild(ta);
+    ta.focus();
+    const ok = document.execCommand('paste');
+    const value = ta.value;
+    document.body.removeChild(ta);
+    if(ok && value && value.trim()) return { text: value.trim(), denied:false };
+  }catch(e){}
+  return { text:'', denied:false };
+}
+
+async function handlePaste(){
+  statusEl.textContent = '';
+  statusEl.classList.remove('error');
+  const { text, denied } = await pasteFromClipboard();
+  if(denied){
+    statusEl.textContent = 'Permiso de portapapeles denegado. Actívalo en Ajustes → Apps → TikTok VIP → Permisos.';
+    statusEl.classList.add('error');
+    return;
+  }
+  if(text){
+    input.value = text;
+    toggleClearBtn();
+    input.focus();
+    statusEl.textContent = '¡Enlace pegado! Toca Buscar.';
+    setTimeout(() => { if(statusEl.textContent.includes('pegado')) statusEl.textContent = ''; }, 2000);
+  }else{
+    input.focus();
+    statusEl.textContent = 'Mantén presionado → Pegar';
+    statusEl.classList.add('error');
+  }
+}
+bindTap(pasteBtn, handlePaste);
+
+function detectPlatform(rawUrl){
+  const normalized = /^https?:\/\//i.test(rawUrl) ? rawUrl : 'https://' + rawUrl;
+  const host = (() => { try{ return new URL(normalized).hostname.toLowerCase(); }catch(e){ return ''; } })();
+  if(/(^|\.)tiktok\.com$/.test(host)) return 'tiktok';
+  return null;
+}
+function normalizeUrl(rawUrl){
+  return /^https?:\/\//i.test(rawUrl) ? rawUrl : 'https://' + rawUrl;
+}
+function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
+async function withRetry(fn, attempts = 2){
+  let lastErr;
+  for(let i = 0; i < attempts; i++){
+    try{ return await fn(); }
+    catch(err){ lastErr = err; if(i < attempts - 1) await wait(800); }
+  }
+  throw lastErr;
+}
+async function fetchTikTok(url){
+  const apiUrl = 'https://www.tikwm.com/api/?url=' + encodeURIComponent(url) + '&hd=1';
+  const res = await fetch(apiUrl);
+  if(!res.ok) throw new Error('network');
+  const json = await res.json();
+  if(json.code !== 0 || !json.data) throw new Error('invalid');
+  const data = json.data;
+  return {
+    author: (data.author && data.author.nickname) || 'Video de TikTok',
+    title: data.title || '',
+    cover: data.cover || data.origin_cover || '',
+    downloadUrl: data.hdplay || data.play,
+    audioUrl: data.music || null,
+    filename: ((data.author && data.author.unique_id) || 'tiktok') + '_' + (data.id || Date.now()),
+  };
+}
+
+let currentVideoUrl = '';
+let currentFilename = '';
+
+async function fetchVideo(){
+  const rawUrl = input.value.trim();
+  statusEl.classList.remove('error');
+  result.classList.remove('show');
+  progressContainer.classList.remove('show');
+  if(!rawUrl){
+    statusEl.textContent = 'Pega un enlace de TikTok primero.';
+    statusEl.classList.add('error');
+    return;
+  }
+  const url = normalizeUrl(rawUrl);
+  const platform = detectPlatform(url);
+  if(platform === 'tiktok') pillTikTok.classList.add('active');
+  else pillTikTok.classList.remove('active');
+  if(!platform){
+    statusEl.textContent = 'No se reconoce ese enlace.';
+    statusEl.classList.add('error');
+    return;
+  }
+  btn.disabled = true;
+  statusEl.innerHTML = '<span class="spinner"></span>Procesando enlace...';
+  try{
+    const info = await withRetry(() => fetchTikTok(url));
+    currentVideoUrl = info.downloadUrl;
+    currentFilename = info.filename;
+    document.getElementById('cover').src = info.cover;
+    document.getElementById('author').textContent = info.author;
+    const descEl = document.getElementById('desc');
+    const descToggle = document.getElementById('desc-toggle');
+    descEl.textContent = info.title;
+    descEl.classList.add('clamped');
+    descToggle.textContent = 'Ver más';
+    descToggle.classList.remove('show');
+    requestAnimationFrame(() => {
+      if(descEl.scrollHeight > descEl.clientHeight + 1){
+        descToggle.classList.add('show');
+      }
+    });
+    const linkNoWm = document.getElementById('link-nowm');
+    const linkAudio = document.getElementById('link-audio');
+    linkNoWm.onclick = () => forceDownload(info.downloadUrl, info.filename + '.mp4', linkNoWm);
+    if(info.audioUrl){
+      linkAudio.style.display = 'flex';
+      linkAudio.onclick = () => forceDownload(info.audioUrl, info.filename + '.mp3', linkAudio);
+    }else{
+      linkAudio.style.display = 'none';
+    }
+    const previewVideo = document.getElementById('preview-video');
+    previewVideo.src = info.downloadUrl;
+    previewVideo.load();
+    result.classList.add('show');
+    statusEl.textContent = 'Listo. Elige qué descargar o activa el mejorador de calidad.';
+  }catch(err){
+    statusEl.textContent = 'No se pudo procesar. Confirma que el video sea público.';
+    statusEl.classList.add('error');
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+function formatBytes(bytes){
+  if(!bytes || bytes === 0) return '0 B';
+  if(bytes < 1024) return bytes + ' B';
+  if(bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(2) + ' MB';
+}
+
+/* === DESCARGA CON BARRA DE PROGRESO COMPLETA === */
+async function saveToGallery(blob, filename){
+  try{
+    if(window.cordova && window.cordova.file){
+      return await new Promise((resolve, reject) => {
+        window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, (dirEntry) => {
+          dirEntry.getDirectory('TikTokVIP', { create: true }, (tikTokDir) => {
+            tikTokDir.getFile(filename, { create: true, exclusive: false }, (fileEntry) => {
+              fileEntry.createWriter((writer) => {
+                writer.onwriteend = () => {
+                  try{
+                    if(cordova.plugins.mediaScanner){
+                      cordova.plugins.mediaScanner.scanFile(fileEntry.nativeURL, () => resolve(true), () => resolve(true));
+                    }else resolve(true);
+                  }catch(e){ resolve(true); }
+                };
+                writer.onerror = reject;
+                writer.write(blob);
+              }, reject);
+            }, reject);
+          }, reject);
+        }, reject);
+      });
+    }
+  }catch(e){}
+  const blobUrl = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = blobUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(blobUrl), 4000);
+  return true;
+}
+
+async function forceDownload(fileUrl, filename, buttonEl, target){
+  target = target || {
+    progressContainer, progressBar, progressPercent, progressCurrent,
+    progressTotal, progressSpeed, progressStatus, statusEl
+  };
+  const originalHtml = buttonEl.innerHTML;
+  buttonEl.disabled = true;
+  buttonEl.innerHTML = '<span>Preparando...</span>';
+  
+  target.progressContainer.classList.add('show');
+  target.progressBar.style.width = '0%';
+  target.progressPercent.textContent = '0%';
+  target.progressCurrent.textContent = '0 B';
+  target.progressTotal.textContent = '0 B';
+  target.progressSpeed.textContent = '0 KB/s';
+  target.progressStatus.textContent = 'Conectando...';
+
+  try{
+    const response = await fetch(fileUrl);
+    if(!response.ok) throw new Error('Error de red');
+    
+    const totalSize = response.headers.get('Content-Length');
+    const totalBytes = totalSize ? parseInt(totalSize, 10) : 0;
+    const reader = response.body.getReader();
+    const chunks = [];
+    let receivedBytes = 0;
+    const startTime = Date.now();
+    let lastUpdateTime = startTime;
+    let lastReceivedBytes = 0;
+
+    target.progressStatus.textContent = 'Descargando...';
+    if(totalBytes > 0) target.progressTotal.textContent = formatBytes(totalBytes);
+    else target.progressTotal.textContent = 'Desconocido';
+
+    while(true){
+      const { done, value } = await reader.read();
+      if(done) break;
+      
+      chunks.push(value);
+      receivedBytes += value.length;
+      
+      const now = Date.now();
+      if(now - lastUpdateTime >= 300 || done){
+        const timeElapsed = (now - startTime) / 1000;
+        const bytesSinceLast = receivedBytes - lastReceivedBytes;
+        const speedBps = bytesSinceLast / ((now - lastUpdateTime) / 1000);
+        
+        target.progressCurrent.textContent = formatBytes(receivedBytes);
+        target.progressSpeed.textContent = formatBytes(Math.round(speedBps)) + '/s';
+        
+        if(totalBytes > 0){
+          const percent = (receivedBytes / totalBytes) * 100;
+          target.progressBar.style.width = percent.toFixed(1) + '%';
+          target.progressPercent.textContent = percent.toFixed(0) + '%';
+          
+          const remainingBytes = totalBytes - receivedBytes;
+          const avgSpeed = receivedBytes / timeElapsed;
+          if(avgSpeed > 0 && remainingBytes > 0){
+            const remainingSec = remainingBytes / avgSpeed;
+            if(remainingSec > 60) target.progressStatus.textContent = `Faltan ${Math.round(remainingSec/60)} min`;
+            else target.progressStatus.textContent = `Faltan ${Math.round(remainingSec)} seg`;
+          }
+        }else{
+          target.progressBar.style.width = '100%';
+          target.progressPercent.textContent = '---';
+          target.progressStatus.textContent = 'Recibiendo datos...';
+        }
+        
+        lastUpdateTime = now;
+        lastReceivedBytes = receivedBytes;
+      }
+    }
+
+    target.progressBar.style.width = '100%';
+    target.progressPercent.textContent = '100%';
+    target.progressCurrent.textContent = formatBytes(receivedBytes);
+    target.progressStatus.textContent = 'Guardando en galería...';
+    
+    const mimeType = filename.toLowerCase().endsWith('.mp3') ? 'audio/mpeg' : 'video/mp4';
+    const blob = new Blob(chunks, { type: mimeType });
+    
+    await saveToGallery(blob, filename);
+    
+    target.progressStatus.textContent = '✅ ¡Guardado en galería!';
+    target.statusEl.textContent = '✅ Video guardado → carpeta TikTokVIP / Galería';
+    
+    setTimeout(() => {
+      target.progressContainer.classList.remove('show');
+    }, 4000);
+    
+  }catch(err){
+    target.progressStatus.textContent = '❌ Error: ' + err.message;
+    target.statusEl.textContent = 'Error al descargar. Intenta de nuevo.';
+    target.statusEl.classList.add('error');
+    setTimeout(() => {
+      target.progressContainer.classList.remove('show');
+    }, 4000);
+  }finally{
+    buttonEl.disabled = false;
+    buttonEl.innerHTML = originalHtml;
+  }
+}
+
+/* === INTERRUPTOR DE ACTIVACIÓN DEL DESCARGADOR === */
+const toggleDownloader = document.getElementById('toggle-downloader');
+const downloaderBody = document.getElementById('downloader-body');
+let downloaderActive = false;
+function setDownloaderActive(active){
+  downloaderActive = active;
+  toggleDownloader.classList.toggle('active', downloaderActive);
+  toggleDownloader.querySelector('span').textContent = downloaderActive ? 'Desactivar' : 'Activar';
+  downloaderBody.classList.toggle('section-disabled', !downloaderActive);
+}
+toggleDownloader.addEventListener('click', () => setDownloaderActive(!downloaderActive));
+
+btn.addEventListener('click', fetchVideo);
+
+const descToggleBtn = document.getElementById('desc-toggle');
+bindTap(descToggleBtn, () => {
+  const descEl = document.getElementById('desc');
+  const expanded = !descEl.classList.contains('clamped');
+  descEl.classList.toggle('clamped', expanded);
+  descToggleBtn.textContent = expanded ? 'Ver más' : 'Ver menos';
+});
+input.addEventListener('keydown', e => { if(e.key === 'Enter') fetchVideo(); });
+
+/* === MEJORADOR DE CALIDAD CON BOTÓN ACTIVAR/DESACTIVAR === */
+const toggleEnhancer = document.getElementById('toggle-enhancer');
+const enhancerPanel = document.getElementById('enhancer-panel');
+const previewVideo = document.getElementById('preview-video');
+const downloadEnhanced = document.getElementById('download-enhanced');
+
+let enhancerActive = false;
+const filters = { brightness: 100, contrast: 100, saturate: 100, sharpen: 0 };
+
+const presets = {
+  original:  { brightness: 100, contrast: 100, saturate: 100, sharpen: 0 },
+  claro:     { brightness: 115, contrast: 105, saturate: 105, sharpen: 2 },
+  mejorado:  { brightness: 105, contrast: 108, saturate: 110, sharpen: 5 },
+  vibrante:  { brightness: 108, contrast: 112, saturate: 135, sharpen: 4 },
+  nitido:    { brightness: 102, contrast: 115, saturate: 108, sharpen: 12 }
+};
+
+toggleEnhancer.addEventListener('click', () => {
+  enhancerActive = !enhancerActive;
+  toggleEnhancer.classList.toggle('active', enhancerActive);
+  toggleEnhancer.querySelector('span').textContent = enhancerActive ? 'Desactivar' : 'Activar';
+  enhancerPanel.classList.toggle('show', enhancerActive);
+  
+  if(!enhancerActive){
+    previewVideo.style.filter = 'none';
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.preset-btn[data-preset="original"]').classList.add('active');
+  }else{
+    applyFilters();
+    previewVideo.play().catch(() => {});
+  }
+});
+
+function applyFilters(){
+  if(!enhancerActive) return;
+  previewVideo.style.filter = `brightness(${filters.brightness}%) contrast(${filters.contrast}%) saturate(${filters.saturate}%)`;
+}
+
+['brightness','contrast','saturate','sharpen'].forEach(id => {
+  const slider = document.getElementById(id);
+  const valueEl = document.getElementById('val-' + id);
+  slider.addEventListener('input', () => {
+    filters[id] = parseInt(slider.value);
+    valueEl.textContent = id === 'sharpen' ? (filters[id]/10).toFixed(1) + 'px' : filters[id] + '%';
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    applyFilters();
+  });
+});
+
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if(!enhancerActive) return;
+    const preset = presets[btn.dataset.preset];
+    Object.keys(preset).forEach(key => {
+      filters[key] = preset[key];
+      document.getElementById(key).value = preset[key];
+      const valueEl = document.getElementById('val-' + key);
+      valueEl.textContent = key === 'sharpen' ? (preset[key]/10).toFixed(1) + 'px' : preset[key] + '%';
+    });
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilters();
+  });
+});
+
+downloadEnhanced.addEventListener('click', () => {
+  if(!currentVideoUrl){
+    statusEl.textContent = 'Primero busca un video de TikTok.';
+    statusEl.classList.add('error');
+    return;
+  }
+  forceDownload(currentVideoUrl, currentFilename + '_mejorado.mp4', downloadEnhanced);
+});
+
+/* ======================================================
+   === ESCÁNER DE CÓDIGO QR (nuevo diseño) ===
+   ====================================================== */
+(function(){
+  const qr2Video = document.getElementById('qr2-video');
+  const qr2StillPreview = document.getElementById('qr2-still-preview');
+  const qr2Placeholder = document.getElementById('qr2-placeholder');
+  const qr2Brackets = document.getElementById('qr2-brackets');
+  const qr2Scanline = document.getElementById('qr2-scanline');
+  const qr2CameraBtn = document.getElementById('qr2-camera-btn');
+  const qr2UploadBtn = document.getElementById('qr2-upload-btn');
+  const qr2FileInput = document.getElementById('qr2-file-input');
+  const qr2StatusText = document.getElementById('qr2-status-text');
+  const qr2Readout = document.getElementById('qr2-readout');
+  const qr2ReadoutValue = document.getElementById('qr2-readout-value');
+  const qr2ReadoutActions = document.getElementById('qr2-readout-actions');
+  const qr2KindBadge = document.getElementById('qr2-kind-badge');
+  const qr2ClearBtn = document.getElementById('qr2-clear-btn');
+  const qr2FlashBtn = document.getElementById('qr2-flash-btn');
+  const toggleScanner = document.getElementById('toggle-scanner');
+  const scannerBody = document.getElementById('scanner-body');
+
+  const qr2Canvas = document.createElement('canvas');
+  const qr2Ctx = qr2Canvas.getContext('2d', { willReadFrequently: true });
+
+  let qr2Stream = null;
+  let qr2RafId = null;
+  let qr2Scanning = false;
+  let qr2Active = false;
+  let qr2Track = null;
+  let qr2FlashOn = false;
+
+  function qr2SetStatus(text, live){
+    qr2StatusText.textContent = text;
+    qr2StatusText.classList.toggle('live', !!live);
+  }
+
+  function qr2ShowVideo(show){
+    qr2Video.classList.toggle('qr2-hidden', !show);
+    qr2Brackets.classList.toggle('qr2-hidden', !show);
+    qr2Scanline.classList.toggle('qr2-hidden', !show);
+    qr2Placeholder.classList.toggle('qr2-hidden', show || !qr2StillPreview.classList.contains('qr2-hidden'));
+  }
+
+  function qr2StopCamera(){
+    if(qr2RafId) cancelAnimationFrame(qr2RafId);
+    qr2RafId = null;
+    qr2Scanning = false;
+    if(qr2Stream){
+      qr2Stream.getTracks().forEach(t => t.stop());
+      qr2Stream = null;
+    }
+    qr2Track = null;
+    qr2FlashOn = false;
+    qr2FlashBtn.classList.remove('show', 'active');
+  }
+
+  async function qr2StartCamera(){
+    qr2StillPreview.classList.add('qr2-hidden');
+    try{
+      qr2SetStatus('ACTIVANDO…');
+      qr2Stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+          advanced: [{ focusMode: 'continuous' }]
+        }
+      });
+      qr2Video.srcObject = qr2Stream;
+      await qr2Video.play();
+      qr2ShowVideo(true);
+      qr2SetStatus('ESCANEANDO', true);
+      qr2Scanning = true;
+
+      qr2Track = qr2Stream.getVideoTracks()[0];
+      try{
+        const caps = qr2Track.getCapabilities ? qr2Track.getCapabilities() : {};
+        qr2FlashBtn.classList.toggle('show', !!caps.torch);
+      }catch(e){
+        qr2FlashBtn.classList.remove('show');
+      }
+
+      qr2TickCamera();
+    }catch(err){
+      qr2SetStatus('CÁMARA NO DISPONIBLE');
+      qr2Placeholder.classList.remove('qr2-hidden');
+      qr2Placeholder.querySelector('p').textContent = 'No se pudo acceder a la cámara. Verifica los permisos o sube una imagen.';
+    }
+  }
+
+  bindTap(qr2FlashBtn, async () => {
+    if(!qr2Track) return;
+    const next = !qr2FlashOn;
+    try{
+      await qr2Track.applyConstraints({ advanced: [{ torch: next }] });
+      qr2FlashOn = next;
+      qr2FlashBtn.classList.toggle('active', qr2FlashOn);
+    }catch(e){
+      qr2SetStatus('FLASH NO DISPONIBLE');
+    }
+  });
+
+  function setScannerActive(active){
+    qr2Active = active;
+    toggleScanner.classList.toggle('active', qr2Active);
+    toggleScanner.querySelector('span').textContent = qr2Active ? 'Desactivar' : 'Activar';
+    scannerBody.classList.toggle('section-disabled', !qr2Active);
+    if(!qr2Active){
+      qr2StopCamera();
+      qr2ShowVideo(false);
+      qr2Placeholder.classList.remove('qr2-hidden');
+      qr2SetStatus('EN ESPERA');
+    }
+  }
+  toggleScanner.addEventListener('click', () => setScannerActive(!qr2Active));
+  window.__ensureScannerActive = function(){ if(!qr2Active) setScannerActive(true); };
+
+  function qr2TickCamera(){
+    if(!qr2Scanning) return;
+    if(qr2Video.readyState === qr2Video.HAVE_ENOUGH_DATA){
+      qr2Canvas.width = qr2Video.videoWidth;
+      qr2Canvas.height = qr2Video.videoHeight;
+      qr2Ctx.drawImage(qr2Video, 0, 0, qr2Canvas.width, qr2Canvas.height);
+      const imageData = qr2Ctx.getImageData(0, 0, qr2Canvas.width, qr2Canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
+      if(code && code.data){
+        qr2HandleResult(code.data);
+        qr2StopCamera();
+        qr2ShowVideo(false);
+        qr2Video.classList.add('qr2-hidden');
+        qr2Placeholder.classList.remove('qr2-hidden');
+        qr2Placeholder.querySelector('p').innerHTML = 'Código leído.<br>Inicia la cámara de nuevo para escanear otro.';
+        qr2SetStatus('LECTURA OK', true);
+        return;
+      }
+    }
+    qr2RafId = requestAnimationFrame(qr2TickCamera);
+  }
+
+  function qr2ScanImageFile(file){
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      qr2StopCamera();
+      qr2ShowVideo(false);
+      qr2StillPreview.src = url;
+      qr2StillPreview.classList.remove('qr2-hidden');
+      qr2Placeholder.classList.add('qr2-hidden');
+
+      qr2Canvas.width = img.naturalWidth;
+      qr2Canvas.height = img.naturalHeight;
+      qr2Ctx.drawImage(img, 0, 0);
+      const imageData = qr2Ctx.getImageData(0, 0, qr2Canvas.width, qr2Canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height);
+      if(code && code.data){
+        qr2HandleResult(code.data);
+        qr2SetStatus('LECTURA OK', true);
+      }else{
+        qr2SetStatus('SIN CÓDIGO EN LA IMAGEN');
+        qr2ClearReadout();
+      }
+    };
+    img.src = url;
+  }
+
+  function qr2Classify(data){
+    if(/^https?:\/\//i.test(data)) return 'url';
+    if(/^WIFI:/i.test(data)) return 'wifi';
+    if(/^MATMSG:|^mailto:/i.test(data)) return 'email';
+    if(/^SMSTO:/i.test(data)) return 'sms';
+    return 'text';
+  }
+
+  function qr2HandleResult(data){
+    const kind = qr2Classify(data);
+    qr2Readout.classList.add('show');
+    qr2ReadoutValue.textContent = data;
+    qr2ReadoutActions.innerHTML = '<button class="qr2-mini-btn" id="qr2-copy-btn-2" type="button">Copiar</button>';
+
+    qr2KindBadge.className = 'qr2-kind-badge' + (kind === 'url' ? ' url' : kind === 'wifi' ? ' wifi' : '');
+    qr2KindBadge.textContent = kind === 'url' ? 'ENLACE'
+      : kind === 'wifi' ? 'RED WI-FI'
+      : kind === 'email' ? 'CORREO'
+      : kind === 'sms' ? 'SMS'
+      : 'TEXTO';
+
+    if(kind === 'url'){
+      const openBtn = document.createElement('button');
+      openBtn.className = 'qr2-mini-btn go';
+      openBtn.type = 'button';
+      openBtn.textContent = 'Usar este enlace';
+      openBtn.onclick = () => {
+        input.value = data.trim();
+        toggleClearBtn();
+        statusEl.textContent = 'Enlace obtenido del QR. Toca Buscar.';
+        statusEl.classList.remove('error');
+        input.focus();
+      };
+      qr2ReadoutActions.appendChild(openBtn);
+    }
+
+    document.getElementById('qr2-copy-btn-2').onclick = () => {
+      navigator.clipboard.writeText(data);
+      const b = document.getElementById('qr2-copy-btn-2');
+      const original = b.textContent;
+      b.textContent = 'Copiado';
+      setTimeout(() => { b.textContent = original; }, 1200);
+    };
+
+    if(kind === 'url'){
+      input.value = data.trim();
+      toggleClearBtn();
+      statusEl.textContent = 'Enlace obtenido del QR. Toca Buscar.';
+      statusEl.classList.remove('error');
+    }
+  }
+
+  function qr2ClearReadout(){
+    qr2Readout.classList.remove('show');
+    qr2ReadoutValue.textContent = '';
+  }
+
+  bindTap(qr2CameraBtn, () => {
+    if(qr2Scanning){
+      qr2StopCamera();
+      qr2ShowVideo(false);
+      qr2Placeholder.classList.remove('qr2-hidden');
+      qr2SetStatus('EN ESPERA');
+    }else{
+      qr2StartCamera();
+    }
+  });
+
+  bindTap(qr2UploadBtn, () => qr2FileInput.click());
+  qr2FileInput.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if(file) qr2ScanImageFile(file);
+  });
+
+  bindTap(qr2ClearBtn, () => {
+    qr2ClearReadout();
+    qr2SetStatus(qr2Scanning ? 'ESCANEANDO' : 'EN ESPERA', qr2Scanning);
+  });
+
+  window.addEventListener('paste', (e) => {
+    const items = e.clipboardData && e.clipboardData.items;
+    if(!items) return;
+    for(const item of items){
+      if(item.type.indexOf('image') !== -1){
+        const file = item.getAsFile();
+        if(file) qr2ScanImageFile(file);
+      }
+    }
+  });
+})();
+
+/* ======================================================
+   === BOTÓN FLOTANTE DE ESQUINA Y PANEL SUPERPUESTO ===
+   ====================================================== */
+(function(){
+  const floatBtn = document.getElementById('floating-toggle-btn');
+  const floatPanel = document.getElementById('floating-panel');
+  const floatClose = document.getElementById('floating-panel-close');
+  const floatMin = document.getElementById('floating-panel-min');
+  const floatDragHandle = document.getElementById('floating-drag-handle');
+  const floatUrl = document.getElementById('floating-url');
+  const floatGo = document.getElementById('floating-go');
+  const floatResult = document.getElementById('floating-result');
+  const floatCover = document.getElementById('floating-cover');
+  const floatAuthor = document.getElementById('floating-author');
+  const floatLinkNoWm = document.getElementById('floating-link-nowm');
+  const floatLinkAudio = document.getElementById('floating-link-audio');
+  const floatStatus = document.getElementById('floating-status');
+  const goTikTokBtn = document.getElementById('go-tiktok-btn');
+
+  const floatingTarget = {
+    progressContainer: document.getElementById('floating-progress-container'),
+    progressBar: document.getElementById('floating-progress-bar'),
+    progressPercent: document.createElement('span'),
+    progressCurrent: document.createElement('span'),
+    progressTotal: document.createElement('span'),
+    progressSpeed: document.createElement('span'),
+    progressStatus: document.getElementById('floating-progress-status'),
+    statusEl: floatStatus
+  };
+
+  async function floatingFetchVideo(){
+    const rawUrl = floatUrl.value.trim();
+    floatStatus.classList.remove('error');
+    floatResult.classList.remove('show');
+    floatingTarget.progressContainer.classList.remove('show');
+    if(!rawUrl){
+      floatStatus.textContent = 'Pega un enlace de TikTok primero.';
+      floatStatus.classList.add('error');
+      return;
+    }
+    const url = normalizeUrl(rawUrl);
+    const platform = detectPlatform(url);
+    if(!platform){
+      floatStatus.textContent = 'No se reconoce ese enlace.';
+      floatStatus.classList.add('error');
+      return;
+    }
+    floatGo.disabled = true;
+    floatStatus.textContent = 'Procesando enlace...';
+    try{
+      const info = await withRetry(() => fetchTikTok(url));
+      floatCover.src = info.cover;
+      floatAuthor.textContent = info.author;
+      floatLinkNoWm.onclick = () => forceDownload(info.downloadUrl, info.filename + '.mp4', floatLinkNoWm, floatingTarget);
+      if(info.audioUrl){
+        floatLinkAudio.style.display = 'flex';
+        floatLinkAudio.onclick = () => forceDownload(info.audioUrl, info.filename + '.mp3', floatLinkAudio, floatingTarget);
+      }else{
+        floatLinkAudio.style.display = 'none';
+      }
+      floatResult.classList.add('show');
+      floatStatus.textContent = 'Listo. Elige qué descargar.';
+    }catch(err){
+      floatStatus.textContent = 'No se pudo procesar. Confirma que el video sea público.';
+      floatStatus.classList.add('error');
+    }finally{
+      floatGo.disabled = false;
+    }
+  }
+
+  function openFloating(){
+    floatPanel.classList.add('show');
+    floatBtn.classList.add('is-hidden');
+  }
+  function closeFloating(){
+    floatPanel.classList.remove('show');
+    floatPanel.classList.remove('minimized');
+    floatMin.textContent = '–';
+    floatMin.title = 'Minimizar';
+    floatBtn.classList.remove('is-hidden');
+  }
+  floatUrl.addEventListener('keydown', e => { if(e.key === 'Enter') floatingFetchVideo(); });
+  bindTap(floatBtn, () => {
+    if(floatPanel.classList.contains('show')) closeFloating(); else openFloating();
+  });
+  bindTap(floatClose, closeFloating);
+  bindTap(floatMin, () => {
+    const nowMinimized = floatPanel.classList.toggle('minimized');
+    floatMin.textContent = nowMinimized ? '▢' : '–';
+    floatMin.title = nowMinimized ? 'Expandir' : 'Minimizar';
+  });
+
+  floatGo.addEventListener('click', floatingFetchVideo);
+
+  /* === PANEL FLOTANTE COMO OVERLAY DEL SISTEMA (sobre otras apps) ===
+     Usa el plugin cordova-plugin-drawoverapps para mostrar
+     floating-panel.html como una burbuja/ventana que se ve
+     encima de CUALQUIER app del teléfono (no solo dentro de
+     TikTok VIP). Requiere que el usuario conceda el permiso
+     "Mostrar sobre otras apps" la primera vez. */
+  function launchSystemOverlay(){
+    if(window.overApps){
+      window.overApps.checkPermission(function(){
+        const options = {
+          path: 'floating-panel.html',
+          hasHead: true,
+          dragToSide: true,
+          enableBackBtn: true,
+          enableCloseBtn: true,
+          verticalPosition: 'bottom',
+          horizontalPosition: 'right'
+        };
+        window.overApps.startOverApp(options, function(success){
+          console.log('Overlay iniciado', success);
+        }, function(err){
+          console.log('No se pudo iniciar el overlay', err);
+          // Si el permiso fue denegado o el plugin falla,
+          // se usa el panel flotante normal dentro de la app.
+          openFloating();
+        });
+      });
+    }else{
+      // No es una app Cordova con el plugin instalado (por
+      // ejemplo, se está probando en un navegador de escritorio):
+      // se usa el panel flotante normal dentro de la página.
+      openFloating();
+    }
+  }
+
+  /* === BOTÓN "IR A TIKTOK" ===
+     Abre TikTok DENTRO de la propia app usando el plugin
+     cordova-plugin-inappbrowser en modo pantalla completa,
+     sin barra de navegación ni URL visible, para que se
+     sienta como una pantalla más de TikTok VIP. Al volver,
+     activa el panel flotante como overlay del sistema para
+     que quede visible incluso si sales de la app. */
+  bindTap(goTikTokBtn, () => {
+    if(window.cordova && cordova.InAppBrowser){
+      const ref = cordova.InAppBrowser.open(
+        'https://www.tiktok.com/',
+        '_blank',
+        'location=no,toolbar=no,hidenavigationbuttons=yes,hideurlbar=yes,fullscreen=yes,zoom=no'
+      );
+      ref.addEventListener('exit', () => {
+        launchSystemOverlay();
+      });
+    }else{
+      window.open('https://www.tiktok.com/', '_blank');
+      launchSystemOverlay();
+    }
+  });
+
+  let dragging = false, offsetX = 0, offsetY = 0;
+  function startDrag(clientX, clientY){
+    dragging = true;
+    const rect = floatPanel.getBoundingClientRect();
+    offsetX = clientX - rect.left;
+    offsetY = clientY - rect.top;
+  }
+  function moveDrag(clientX, clientY){
+    if(!dragging) return;
+    let x = clientX - offsetX;
+    let y = clientY - offsetY;
+    x = Math.max(4, Math.min(window.innerWidth - floatPanel.offsetWidth - 4, x));
+    y = Math.max(4, Math.min(window.innerHeight - floatPanel.offsetHeight - 4, y));
+    floatPanel.style.left = x + 'px';
+    floatPanel.style.top = y + 'px';
+    floatPanel.style.right = 'auto';
+    floatPanel.style.bottom = 'auto';
+  }
+  function endDrag(){ dragging = false; }
+
+  floatDragHandle.addEventListener('mousedown', e => startDrag(e.clientX, e.clientY));
+  window.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
+  window.addEventListener('mouseup', endDrag);
+  floatDragHandle.addEventListener('touchstart', e => { const t = e.touches[0]; startDrag(t.clientX, t.clientY); }, { passive:true });
+  window.addEventListener('touchmove', e => { if(dragging){ const t = e.touches[0]; moveDrag(t.clientX, t.clientY); } }, { passive:true });
+  window.addEventListener('touchend', endDrag);
+})();
+</script>
+</body>
+</html>
