@@ -1,0 +1,49 @@
+name: Compilar APK Android
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Instalar Cordova
+        run: npm install -g cordova
+
+      - name: Agregar plataforma Android
+        run: cordova platform add android
+
+      - name: Instalar plugins
+        run: |
+          cordova plugin add cordova-plugin-inappbrowser
+          cordova plugin add cordova-plugin-file
+          cordova plugin add cordova-plugin-android-permissions
+          cordova plugin add https://github.com/ahmedwahba/cordova-plugin-drawoverapps
+
+      - name: Compilar APK (debug)
+        run: cordova build android
+
+      - name: Subir el APK como resultado descargable
+        uses: actions/upload-artifact@v4
+        with:
+          name: tiktokvip-apk
+          path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
